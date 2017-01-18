@@ -1,24 +1,28 @@
 
-// let player = require('./player'); //importing the module player
-// let team = require('./team'); //importing the module team
-let game1 = require('./game1');
+let Player = require('./player'); //importing the module player
+let Team = require('./team'); //importing the module team
+/*let game1 = require('./game1');
 let game2 = require('./game2');
-let game3 = require('./game3');
+let game3 = require('./game3');*/
 
 window.addEventListener('load', function() { //when the page loads, run this function
     console.log('Ready to play');
 
-    // player.Player();
-    // team.Team();
-    game1.game1();
-    game2.game2();
-    game3.game3();
-    
+    let chaserMembers = ['Parker', 'Christian', 'Ryan', 'Emily'];
+    let runnerMembers = ['Cameron', 'Anna', 'Dennis', 'Hayley'];
 
-    
-    //teamNames.teamNames();
+    let c = new Team.Team ('chasers');
+    let r = new Team.Team ('runners');
 
-    // console.log(player.playerdudes[1].tag()); //tag you are it
-    // console.log(player.playerdudes);
-    // console.log(team.teamNames);
+    chaserMembers.forEach(function(playerName) {
+        let newMember = new Player.Player (playerName);
+        c.add(newMember);
+        console.log(playerName);
+    });
+
+    runnerMembers.forEach(function(playerName) {
+        let newMember = new Player.Player (playerName);
+        r.add(newMember);
+        console.log(playerName);
+    });
 });
