@@ -2,49 +2,56 @@
 
 let Player = require('./player'); //importing the module player
 let Team = require('./team'); //importing the module team
-/*let game1 = require('./game1');
-let game2 = require('./game2');
-let game3 = require('./game3');*/
+let game1 = require('./game1');
+// let game2 = require('./game2');
+// let game3 = require('./game3');
 
 window.addEventListener('load', function() { //when the page loads, run this function
     console.log('Ready to play');
 
-    // Player.Player();
-    // Team.Team();
-    // game1.game1();
-    // game2.game2();
-    // game3.game3();
-    
 
-    
-    //teamNames.teamNames();
+    game1.game1();
 
-    // console.log(player.playerdudes[1].tag()); //tag you are it
-    // console.log(player.playerdudes);
-    // console.log(team.teamNames);
-
-
-    //-------------------------------------
-
-    let chaserMembers = ['Parker', 'Christian', 'Ryan', 'Emily'];
-    let runnerMembers = ['Cameron', 'Anna', 'Dennis', 'Hayley'];
-
-    let c = new Team.Team ('chasers');
-    let r = new Team.Team ('runners');
-
-    chaserMembers.forEach(function(playerName) {
-        let newMember = new Player.Player (playerName);
-        c.add(newMember);
-        console.log(playerName);
-    });
-
-    runnerMembers.forEach(function(playerName) {
-        let newMember = new Player.Player (playerName);
-        r.add(newMember);
-        console.log(playerName);
-    });
 });
-},{"./player":2,"./team":3}],2:[function(require,module,exports){
+},{"./game1":2,"./player":3,"./team":4}],2:[function(require,module,exports){
+
+let Player = require('./player'); 
+let Team = require('./team'); 
+
+function game1() {
+    let c = Team.chasers();
+    let r = Team.runners();
+
+    c.teamPlayers[0].tag(r.teamPlayers[0]); //freeze - parker tags cameron -->cameron is frozen
+    console.log(c.won(r));
+    console.log(r.won());
+    c.teamPlayers[0].tag(r.teamPlayers[1]); //freeze - parker tags anna --> Anna is frozen
+    console.log(c.won(r));
+    console.log(r.won());
+    r.teamPlayers[2].tag(r.teamPlayers[0]); //unfreeze -dennis tags cameron -> cameron is unfrozen
+    console.log(c.won(r));
+    console.log(r.won());
+    r.teamPlayers[3].tag(c.teamPlayers[2]); //nothing -Hayley tags Ryan -->nothing
+    console.log(c.won(r));
+    console.log(r.won());
+    c.teamPlayers[2].tag(r.teamPlayers[2]); //freeze - Ryan tags Dennis -> Dennis is frozen
+    console.log(c.won(r));
+    console.log(r.won());
+    r.teamPlayers[3].tag(c.teamPlayers[1]); //nothing - Hayley tags Christian -->Nothing
+    console.log(c.won(r));
+    console.log(r.won());
+    c.teamPlayers[0].tag(r.teamPlayers[3]); //freeze - parker tags Hayley --> Hayley is frozen
+    console.log(c.won(r));
+    console.log(r.won());
+    c.teamPlayers[1].tag(r.teamPlayers[0]); //freeze - Christian tags Cameron --> Cameron is frozen
+    console.log('hey' + c.won(r));
+    console.log(r.won());
+}
+
+module.exports = {
+    game1: game1, 
+};
+},{"./player":3,"./team":4}],3:[function(require,module,exports){
 console.log('players are here');
 
 
@@ -75,9 +82,9 @@ function Player(name) {  //Constructor - player is being constructed.
 module.exports = {
     Player: Player,
 };
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 console.log('teams are here');
-
+let Player = require('./player'); 
 
 function Team(teamname) { //Constructor - team is being constructed. 
     this.teamname = teamname; //this refers to the team -  the object that the function was called on
@@ -111,11 +118,14 @@ function Team(teamname) { //Constructor - team is being constructed.
         }*/
 
         if (this.teamname === 'chasers') {
-            return otherTeam.teamPlayers.every(function(dude) {  //'every' means that dude.frozen() has to be true for ALL the teamPlayers
-                return dude.frozen();
-            });
+            for( let i =0; i < otherTeam.teamPlayers.length; i++) {
+                if(otherTeam.teamPlayers[i].isFrozen === false) {
+                    return false;
+                }
+            }
+            
+            return true;
         }
-
 
         //ORIGINAL WAYS: 
         //-------------#1:
@@ -128,18 +138,50 @@ function Team(teamname) { //Constructor - team is being constructed.
             return false;
         }*/
 
-        if (this.teamname === 'Runners') {
-            return this.players.some(function(dude) {  //'some' returns true if any dude.getFlag() = true
-                return dude.hasFlag();
-            });
+        if (this.teamname === 'runners') {
+            for(let i = 0; i < this.teamPlayers.length; i++) {
+                if(this.teamPlayers[i].hasFlag === true) {
+                    return true;
+                }
+            }
+
+            return false;
         }
-    }
+    };
 
     return this;
 } 
 
 
+function chasers() {
+    let chaserMembers = ['Parker', 'Christian', 'Ryan', 'Emily'];
+
+    let c = new Team ('chasers');
+
+    chaserMembers.forEach(function(playerName) {
+        let newMember = new Player.Player(playerName);
+        c.add(newMember);
+    });
+
+    return c;
+}
+
+function runners() {
+    let runnerMembers = ['Cameron', 'Anna', 'Dennis', 'Hayley'];
+
+    let r = new Team ('runners');
+
+    runnerMembers.forEach(function(playerName) {
+        let newMember = new Player.Player(playerName);
+        r.add(newMember);
+    });
+
+    return r;
+}
+
 module.exports = {
     Team: Team,
+    chasers: chasers,
+    runners: runners
 };
-},{}]},{},[1]);
+},{"./player":3}]},{},[1]);

@@ -1,5 +1,5 @@
 console.log('teams are here');
-
+let Player = require('./player'); 
 
 function Team(teamname) { //Constructor - team is being constructed. 
     this.teamname = teamname; //this refers to the team -  the object that the function was called on
@@ -33,11 +33,14 @@ function Team(teamname) { //Constructor - team is being constructed.
         }*/
 
         if (this.teamname === 'chasers') {
-            return otherTeam.teamPlayers.every(function(dude) {  //'every' means that dude.frozen() has to be true for ALL the teamPlayers
-                return dude.frozen();
-            });
+            for( let i =0; i < otherTeam.teamPlayers.length; i++) {
+                if(otherTeam.teamPlayers[i].isFrozen === false) {
+                    return false;
+                }
+            }
+            
+            return true;
         }
-
 
         //ORIGINAL WAYS: 
         //-------------#1:
@@ -50,17 +53,49 @@ function Team(teamname) { //Constructor - team is being constructed.
             return false;
         }*/
 
-        if (this.teamname === 'Runners') {
-            return this.players.some(function(dude) {  //'some' returns true if any dude.getFlag() = true
-                return dude.hasFlag();
-            });
+        if (this.teamname === 'runners') {
+            for(let i = 0; i < this.teamPlayers.length; i++) {
+                if(this.teamPlayers[i].hasFlag === true) {
+                    return true;
+                }
+            }
+
+            return false;
         }
-    }
+    };
 
     return this;
 } 
 
 
+function chasers() {
+    let chaserMembers = ['Parker', 'Christian', 'Ryan', 'Emily'];
+
+    let c = new Team ('chasers');
+
+    chaserMembers.forEach(function(playerName) {
+        let newMember = new Player.Player(playerName);
+        c.add(newMember);
+    });
+
+    return c;
+}
+
+function runners() {
+    let runnerMembers = ['Cameron', 'Anna', 'Dennis', 'Hayley'];
+
+    let r = new Team ('runners');
+
+    runnerMembers.forEach(function(playerName) {
+        let newMember = new Player.Player(playerName);
+        r.add(newMember);
+    });
+
+    return r;
+}
+
 module.exports = {
     Team: Team,
+    chasers: chasers,
+    runners: runners
 };
